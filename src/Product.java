@@ -13,14 +13,13 @@ public class Product
 
     public Product(String barcode, String category, String name, Double kr, Double ore, Discount discount)
     {
-        Discount itemDiscount = new Discount();
-        this.discount = itemDiscount;
-
         this.barcode = barcode;
         this.category = category;
         this.name = name;
         this.kr = kr;
         this.ore = ore;
+
+        this.discount = discount;
     }
 
     public String getBarcode() {
