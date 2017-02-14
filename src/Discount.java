@@ -3,11 +3,11 @@
  */
 public class Discount {
     private String barcode;
-    private Integer limit;
-    private Double kr;
-    private Double ore;
+    private String limit;
+    private String kr;
+    private String ore;
 
-    public Discount(String barcode, Integer limit, Double kr, Double ore)
+    public Discount(String barcode, String limit, String kr, String ore)
     {
         this.barcode = barcode;
         this.limit = limit;
@@ -18,19 +18,19 @@ public class Discount {
         return barcode;
     }
 
-    public Integer getLimit() {
-        return limit;
+    public Double getLimit() {
+        return Double.parseDouble(limit);
     }
 
     public Double getKr() {
-        return kr;
+        return Double.parseDouble(kr);
     }
 
     public Double getOre() {
-        return ore;
+        return Double.parseDouble(ore);
     }
 
     public Double getPrice() {
-        return kr + (ore / 100);
+        return Double.parseDouble(kr) + (Double.parseDouble(ore) / 100);
     }
 }

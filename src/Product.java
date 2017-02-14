@@ -6,20 +6,22 @@ public class Product
     private String barcode;
     private String category;
     private String name;
-    private Double kr;
-    private Double ore;
+    private String kr;
+    private String ore;
 
     private Discount discount;
 
-    public Product(String barcode, String category, String name, Double kr, Double ore, Discount discount)
+    public Product(String barcode,
+                   String category,
+                   String name,
+                   String kr,
+                   String ore)
     {
         this.barcode = barcode;
         this.category = category;
         this.name = name;
         this.kr = kr;
         this.ore = ore;
-
-        this.discount = discount;
     }
 
     public String getBarcode() {
@@ -35,15 +37,15 @@ public class Product
     }
 
     public Double getKr() {
-        return kr;
+        return Double.parseDouble(kr);
     }
 
     public Double getOre() {
-        return ore;
+        return Double.parseDouble(ore);
     }
 
     public Double getPrice() {
-        return kr + (ore / 100);
+        return Double.parseDouble(kr) + (Double.parseDouble(ore) / 100);
     }
 
     public Discount getDiscount() {
