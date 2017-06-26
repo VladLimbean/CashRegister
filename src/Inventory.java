@@ -1,5 +1,8 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -14,6 +17,20 @@ public class Inventory {
     private List<Discount> discounts;
     private List<Product> prodcuts;
 
+    private String url = "jdbc:mysql://localhost/";
+    private String driver = "com.mysql.jdbc.Driver";
+
+    private String dbUsername = "root"; // admin for sql connectToDatabase
+    private String dbPassword = "password goes here";
+
+    private String username = ""; // set in console
+    private String password = ""; // set in console
+
+    private int userID = -1;
+
+    private Connection imdbConn;
+    private Connection customersConn;
+
     public Inventory(String prices, String discounts){
         try
         {
@@ -26,8 +43,28 @@ public class Inventory {
         }
     }
 
+    private void connectToDatabase()
+    {
+        try
+        {
+            //log in to the database
+            Class.forName(driver);
+
+            imdbConn = DriverManager.getConnection(url + "Inventory", dbUsername, dbPassword);
+            customersConn = DriverManager.getConnection(url + "Inventory", dbUsername, dbPassword);
+            System.out.println("Connected to the database");
+        }
+        catch (Exception e)
+        {
+            System.out.println("Connection fail. Unable to connect to database");
+            e.printStackTrace();
+        }
+    }
+
     /**
-     * Creates a list of discount objects from a text file
+     * Creates a list of discount objects from a text file.
+     * Will only run if the SQL is empty
+     *
      * @param arg                       Hardcoded file path of a txt file
      * @return                          A list of Discount objects
      * @throws FileNotFoundException    In case I get the file path wrong

@@ -1,5 +1,5 @@
 /**
- * Handles final printing of receipt
+ * Handles final printing of receipts
  */
 public class RecepitPrinter
 {
