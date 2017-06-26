@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ac7d2b96-1927-4024-a0c0-2749f5e5c144" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Inventory.java" afterPath="$PROJECT_DIR$/src/Inventory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/RecepitPrinter.java" afterPath="$PROJECT_DIR$/src/RecepitPrinter.java" />
-    </list>
+    <list default="true" id="ac7d2b96-1927-4024-a0c0-2749f5e5c144" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -614,12 +611,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1498480095616</updated>
-      <workItem from="1498480097144" duration="9810000" />
+      <workItem from="1498480097144" duration="10002000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="9810000" />
+    <option name="totallyTimeSpent" value="10002000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
