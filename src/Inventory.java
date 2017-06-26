@@ -3,9 +3,14 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 /**
- * Creates and stores the virtual store inventory and
+ * The class reads the initial store inventory and list of discounts from separate text files.
+ * The information is stored into an SQL server and can be modified later.
  */
+
+//TO DO: create MySQL database to store discounts and product information.
+//The inventory class should do all of the updating to the database
 public class Inventory {
+
     private List<Discount> discounts;
     private List<Product> prodcuts;
 
@@ -14,11 +19,19 @@ public class Inventory {
         {
             this.discounts = discountList(discounts);
             this.prodcuts = productList(prices);
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e)
+        {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Creates a list of discount objects from a text file
+     * @param arg                       Hardcoded file path of a txt file
+     * @return                          A list of Discount objects
+     * @throws FileNotFoundException    In case I get the file path wrong
+     */
     private static List<Discount> discountList(String arg) throws FileNotFoundException
     {
         List<Discount> result = new ArrayList<>();
@@ -38,7 +51,11 @@ public class Inventory {
                 for (int i = 1; i < discountParam.length; ++i) {
                     validateNumeric(discountParam[i]);
                 }
-                Discount currentDiscount = new Discount(discountParam[0], discountParam[1], discountParam[2], discountParam[3]);
+                Discount currentDiscount = new Discount(
+                        discountParam[0],
+                        Integer.parseInt(discountParam[1]),
+                        Double.parseDouble(discountParam[2]),
+                        Double.parseDouble(discountParam[3]));
 
                 //add discount to list
                 result.add(currentDiscount);
@@ -46,11 +63,18 @@ public class Inventory {
         }
         catch (FileNotFoundException e)
         {
-        e.printStackTrace();
+            e.printStackTrace();
         }
         return result;
     }
 
+    /**
+     * Creates initial product list and populates SQL database with products
+     *
+     * @param arg                       Hardcoded file path which I should learn how to circumvent
+     * @return                          List representation of product objects
+     * @throws FileNotFoundException    In case I get the file path wrong
+     */
     private static List<Product> productList(String arg) throws FileNotFoundException {
 
         List<Product> result = new ArrayList<>();
@@ -78,8 +102,9 @@ public class Inventory {
                             productParam[0],
                             productParam[1],
                             productParam[2],
-                            productParam[3],
-                            productParam[4]);
+                            //int parsing like a noob
+                            Double.parseDouble(productParam[3]),
+                            Double.parseDouble(productParam[4]));
 
                     // add product to list
                     result.add(currentProduct);
@@ -113,7 +138,7 @@ public class Inventory {
     }
 
     /**
-     * Used to validate number values in Product and Discount objects.
+     * Checks if there are non numeric characters in a string.
      *
      * A product's price and assigned discount and limit are to be stored as positive doubles. Any other format
      * is illegal.
@@ -130,19 +155,5 @@ public class Inventory {
         {
             throw new IllegalArgumentException("Price or limit values cannot be empty.");
         }
-    }
-
-    /**
-     * Creates a hashmap of the store inventory.
-     *
-     * The hashmap holds a unique barcode as key, a product is added as value.
-     * Before putting the product value in the hashmap the barcode is cross-referenced with Discount barcodes.
-     * If a product has a discount it is stored in the respective product instance.
-     *
-     * @return A hashmap of the store inventory.
-     */
-    public Map<String, Product> inventoryMap()
-    {
-        return null;
     }
 }

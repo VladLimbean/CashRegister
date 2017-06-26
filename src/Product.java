@@ -3,19 +3,16 @@
  */
 public class Product
 {
-    private String barcode;
-    private String category;
-    private String name;
-    private String kr;
-    private String ore;
+    private String      barcode;
+    private String      category;
+    private String      name;
+    private Double      kr;
+    private Double      ore;
 
-    private Discount discount;
+    private Discount    discount;
+    private boolean     hasDiscount;
 
-    public Product(String barcode,
-                   String category,
-                   String name,
-                   String kr,
-                   String ore)
+    public Product(String barcode, String category, String name, Double kr, Double ore)
     {
         this.barcode = barcode;
         this.category = category;
@@ -37,18 +34,42 @@ public class Product
     }
 
     public Double getKr() {
-        return Double.parseDouble(kr);
+        return kr;
+    }
+    public Double getOre()
+    {
+        return ore;
     }
 
-    public Double getOre() {
-        return Double.parseDouble(ore);
+    public void addDiscount(Discount newDiscount)
+    {
+        this.discount = newDiscount;
+        this.hasDiscount = true;
     }
 
-    public Double getPrice() {
-        return Double.parseDouble(kr) + (Double.parseDouble(ore) / 100);
+    public void removeDiscount(Discount discountToRemove)
+    {
+        if(this.discount.getBarcode().equals(discountToRemove.getBarcode()))
+        {
+            this.discount = null;
+            this.hasDiscount = false;
+        }
+        else
+        {
+            System.out.println("Error: product barcode does not match discount barcode.");
+        }
     }
 
     public Discount getDiscount() {
-        return discount;
+        if(hasDiscount)
+        {
+            return discount;
+        }
+        return null;
+    }
+
+    public Double getBasePrice()
+    {
+        return kr + (ore / 100);
     }
 }
