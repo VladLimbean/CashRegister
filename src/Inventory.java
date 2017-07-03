@@ -12,30 +12,37 @@ import java.util.*;
 
 //TO DO: create MySQL database to store discounts and product information.
 //The inventory class should do all of the updating to the database
-public class Inventory {
 
+
+public class Inventory
+{
     private List<Discount> discounts;
     private List<Product> prodcuts;
 
-    private String url = "jdbc:mysql://localhost/";
+    private String dbms =    "mysql";
+    private String serverName = "localhost";
+    private String portNumber = "3306";
+
+    private String dbName = "Inventory";
     private String driver = "com.mysql.jdbc.Driver";
 
     private String dbUsername = "root"; // admin for sql connectToDatabase
-    private String dbPassword = "password goes here";
+    private String dbPassword = "";
 
-    private String username = ""; // set in console
-    private String password = ""; // set in console
+    private Connection inventoryConnection;
 
-    private int userID = -1;
-
-    private Connection imdbConn;
-    private Connection customersConn;
-
-    public Inventory(String prices, String discounts){
+    /**
+     * Constructor use to build a list of products and discounts from .txt files.
+     *
+     * @param prices      File path to prices.txt
+     * @param discounts   File path to discounts.txt
+     */
+    public Inventory(String prices, String discounts)
+    {
         try
         {
-            this.discounts = discountList(discounts);
-            this.prodcuts = productList(prices);
+            this.discounts = generateListOfDiscounts(discounts);
+            this.prodcuts =  generateListOfProducts(prices);
         }
         catch (FileNotFoundException e)
         {
@@ -43,22 +50,40 @@ public class Inventory {
         }
     }
 
-    private void connectToDatabase()
+    /**
+     * Second constructor used to connect to the database
+     */
+    public Inventory()
     {
         try
         {
-            //log in to the database
             Class.forName(driver);
-
-            imdbConn = DriverManager.getConnection(url + "Inventory", dbUsername, dbPassword);
-            customersConn = DriverManager.getConnection(url + "Inventory", dbUsername, dbPassword);
-            System.out.println("Connected to the database");
+            inventoryConnection = this.getConnection();
         }
         catch (Exception e)
         {
-            System.out.println("Connection fail. Unable to connect to database");
             e.printStackTrace();
+            System.out.println("\nConnection error");
         }
+    }
+
+    public Connection getConnection() throws SQLException
+    {
+        Connection conn;
+        Properties connectionProperties = new Properties();
+
+        connectionProperties.put("user", dbUsername);
+        connectionProperties.put("password", dbPassword);
+
+        conn = DriverManager.getConnection("jdbc:" +
+                this.dbms + "://" +
+                this.serverName + ":" +
+                this.portNumber + "/" +
+                this.dbName,
+                connectionProperties);
+
+        System.out.println("Connection successful");
+        return conn;
     }
 
     /**
@@ -69,14 +94,15 @@ public class Inventory {
      * @return                          A list of Discount objects
      * @throws FileNotFoundException    In case I get the file path wrong
      */
-    private static List<Discount> discountList(String arg) throws FileNotFoundException
+    private static List<Discount> generateListOfDiscounts(String arg) throws FileNotFoundException
     {
         List<Discount> result = new ArrayList<>();
         try
         {
             Scanner sc = new Scanner(new File(arg));
 
-            while (sc.hasNext()) {
+            while (sc.hasNext())
+            {
                 //creates string array which stores discount information
                 String[] discountParam;
                 String currentLine = sc.nextLine();
@@ -85,7 +111,8 @@ public class Inventory {
 
                 //validate barcode and number values and creates Discount object
                 validateBarcode(discountParam[0]);
-                for (int i = 1; i < discountParam.length; ++i) {
+                for (int i = 1; i < discountParam.length; ++i)
+                {
                     validateNumeric(discountParam[i]);
                 }
                 Discount currentDiscount = new Discount(
@@ -112,13 +139,16 @@ public class Inventory {
      * @return                          List representation of product objects
      * @throws FileNotFoundException    In case I get the file path wrong
      */
-    private static List<Product> productList(String arg) throws FileNotFoundException {
+    private static List<Product> generateListOfProducts(String arg) throws FileNotFoundException
+    {
 
         List<Product> result = new ArrayList<>();
-        try {
+        try
+        {
             Scanner sc = new Scanner(new File(arg));
 
-            while (sc.hasNext()) {
+            while (sc.hasNext())
+            {
                 String[] productParam;
                 String currentLine = sc.nextLine();
 
@@ -192,5 +222,13 @@ public class Inventory {
         {
             throw new IllegalArgumentException("Price or limit values cannot be empty.");
         }
+    }
+
+    private User createUser(String firstName, String lastName, String username, String password)
+    {
+        User newUser = new User(firstName, lastName, username, password);
+        System.out.println("\nUser created");
+
+        return newUser;
     }
 }
