@@ -4,32 +4,34 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.List;
+import java.util.Properties;
+
 
 /**
  * The class reads the initial store inventory and list of discounts from separate text files.
  * The information is stored into an SQL server and can be modified later.
  */
 
-//TO DO: create MySQL database to store discounts and product information.
 //The inventory class should do all of the updating to the database
 
 
 public class Inventory
 {
     private List<Discount> discounts;
-    private List<Product> prodcuts;
+    private List<Product> products;
 
     private String dbms =    "mysql";
-    private String serverName = "localhost";
+    private String serverName = "localhost"; //"127.0.0.1";
     private String portNumber = "3306";
 
     private String dbName = "Inventory";
     private String driver = "com.mysql.jdbc.Driver";
 
     private String dbUsername = "root"; // admin for sql connectToDatabase
-    private String dbPassword = "";
+    private String dbPassword = "iamfuzzy222";
 
-    private Connection inventoryConnection;
+    private Connection invConn;
 
     /**
      * Constructor use to build a list of products and discounts from .txt files.
@@ -42,7 +44,7 @@ public class Inventory
         try
         {
             this.discounts = generateListOfDiscounts(discounts);
-            this.prodcuts =  generateListOfProducts(prices);
+            this.products =  generateListOfProducts(prices);
         }
         catch (FileNotFoundException e)
         {
@@ -57,18 +59,25 @@ public class Inventory
     {
         try
         {
-            Class.forName(driver);
-            inventoryConnection = this.getConnection();
+            this.invConn = getConnection();
         }
-        catch (Exception e)
+        catch (SQLException e)
         {
             e.printStackTrace();
-            System.out.println("\nConnection error");
         }
     }
 
     public Connection getConnection() throws SQLException
     {
+        try
+        {
+            Class.forName(driver);
+        }
+        catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+
         Connection conn;
         Properties connectionProperties = new Properties();
 
@@ -76,10 +85,10 @@ public class Inventory
         connectionProperties.put("password", dbPassword);
 
         conn = DriverManager.getConnection("jdbc:" +
-                this.dbms + "://" +
-                this.serverName + ":" +
-                this.portNumber + "/" +
-                this.dbName,
+                        this.dbms + "://" +
+                        this.serverName + ":" +
+                        this.portNumber + "/" +
+                        this.dbName,
                 connectionProperties);
 
         System.out.println("Connection successful");
@@ -101,7 +110,7 @@ public class Inventory
         {
             Scanner sc = new Scanner(new File(arg));
 
-            while (sc.hasNext())
+            while (sc.hasNextLine())
             {
                 //creates string array which stores discount information
                 String[] discountParam;
@@ -115,6 +124,7 @@ public class Inventory
                 {
                     validateNumeric(discountParam[i]);
                 }
+
                 Discount currentDiscount = new Discount(
                         discountParam[0],
                         Integer.parseInt(discountParam[1]),
@@ -230,5 +240,28 @@ public class Inventory
         System.out.println("\nUser created");
 
         return newUser;
+    }
+
+    public List<Product> getProducts()
+    {
+        return products;
+    }
+
+    public List<Discount> getDiscounts()
+    {
+        return discounts;
+    }
+
+    public void killConnection(Connection conn) {
+        if (conn != null) {
+            try {
+                conn.close();
+                System.out.println("The connection you asked to be closed is severed");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+
     }
 }

@@ -21,3 +21,10 @@ barcode 		varchar(30),
 
 foreign key(barcode) references products(barcode)
 );
+
+create table cr_user(
+firstname		varchar(99),
+lastname		varchar(99),
+username		varchar(99),
+pass			varchar(99)
+);

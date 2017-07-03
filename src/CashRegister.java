@@ -21,7 +21,5 @@ public class CashRegister {
             e.printStackTrace();
             System.out.println("\nConnection error");
         }
-        
-
     }
 }

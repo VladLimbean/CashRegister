@@ -36,6 +36,7 @@ public class Product
     public Double getKr() {
         return kr;
     }
+
     public Double getOre()
     {
         return ore;
