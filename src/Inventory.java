@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.List;
@@ -103,7 +104,7 @@ public class Inventory
      * @return                          A list of Discount objects
      * @throws FileNotFoundException    In case I get the file path wrong
      */
-    private static List<Discount> generateListOfDiscounts(String arg) throws FileNotFoundException
+    private List<Discount> generateListOfDiscounts(String arg) throws FileNotFoundException
     {
         List<Discount> result = new ArrayList<>();
         try
@@ -149,7 +150,7 @@ public class Inventory
      * @return                          List representation of product objects
      * @throws FileNotFoundException    In case I get the file path wrong
      */
-    private static List<Product> generateListOfProducts(String arg) throws FileNotFoundException
+    private List<Product> generateListOfProducts(String arg) throws FileNotFoundException
     {
 
         List<Product> result = new ArrayList<>();
@@ -190,10 +191,22 @@ public class Inventory
         }
         catch (FileNotFoundException e)
         {
-            //exception in case something explodes, may be moved later
+            //collapsed exception catch for SQL error and FileNotFound
             e.printStackTrace();
         }
+
+        System.out.println(result.size() + " products created");
         return result;
+    }
+
+    //adds every product in the list to the database.
+    //TO DO: think about inventory update sequences. How would you do it naturally? Then build it.
+    private void constructProductDB(List<Product> prod) throws SQLException
+    {
+        for(Product p : prod)
+        {
+            addProdToDB(p);
+        }
     }
 
     /**
@@ -240,6 +253,31 @@ public class Inventory
         System.out.println("\nUser created");
 
         return newUser;
+    }
+
+    private void addProdToDB(Product product) throws SQLException
+    {
+        try
+        {
+            invConn.setAutoCommit(false);
+
+            PreparedStatement pst = invConn.prepareStatement("INSERT INTO Products(?, ?, ?, ?, ?)");
+            pst.setString(1, product.getBarcode());
+            pst.setString(2, product.getCategory());
+            pst.setString(3, product.getName());
+            pst.setDouble(4, product.getKr());
+            pst.setDouble(5, product.getOre());
+
+            pst.execute();
+            System.out.println(product.toString() + " added to database");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+            invConn.rollback();
+        } finally {
+            invConn.setAutoCommit(true);
+        }
     }
 
     public List<Product> getProducts()

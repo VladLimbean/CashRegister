@@ -73,4 +73,16 @@ public class Product
     {
         return kr + (ore / 100);
     }
+
+    @Override
+    public String toString()
+    {
+        return "Product{" +
+                "barcode='" + barcode + '\'' +
+                ", category='" + category + '\'' +
+                ", name='" + name + '\'' +
+                ", kr=" + kr +
+                ", ore=" + ore +
+                '}';
+    }
 }
