@@ -30,7 +30,7 @@ public class Inventory
     private String driver = "com.mysql.jdbc.Driver";
 
     private String dbUsername = "root"; // admin for sql connectToDatabase
-    private String dbPassword = "iamfuzzy222";
+    private String dbPassword = "";
 
     private Connection invConn;
 
